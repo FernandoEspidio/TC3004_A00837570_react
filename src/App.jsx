@@ -32,7 +32,7 @@ function App() {
       <Header/>
       {counter}
       <Button 
-        name ={nombre} 
+        name ={"suma"} 
         click = {sum}
       />
 
