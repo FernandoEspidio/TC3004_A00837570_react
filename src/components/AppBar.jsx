@@ -14,10 +14,10 @@ import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { useNavigate } from 'react-router-dom';
 
-const pages = ['Invetario', 'Agregar Producto'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const pages = ['Inventario', 'Agregar Producto'];
+const settings = ['Logout'];
 
-function ResponsiveAppBar() {
+function ResponsiveAppBar({setLogout}) {
     const navigate = useNavigate()
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -39,8 +39,14 @@ function ResponsiveAppBar() {
     }
   };
 
-  const handleCloseUserMenu = () => {
+  const handleCloseUserMenu = (e) => {
     setAnchorElUser(null);
+    if(e.target.textContent === settings[0]){
+      setLogout();
+      navigate("/");
+  }else if(e.target.textContent === settings[1]) {
+      navigate("/");
+  }
   };
 
   return (
@@ -62,6 +68,8 @@ function ResponsiveAppBar() {
               color: 'inherit',
               textDecoration: 'none',
             }}
+            onClick={() => navigate('/home')}
+
           >
             LOGO
           </Typography>
@@ -105,7 +113,7 @@ function ResponsiveAppBar() {
             variant="h5"
             noWrap
             component="a"
-            href="#app-bar-with-responsive-menu"
+            href="/home"
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },
@@ -116,7 +124,7 @@ function ResponsiveAppBar() {
               color: 'inherit',
               textDecoration: 'none',
             }}
-          >
+            >
             LOGO
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
