@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Button from './components/Button';
@@ -13,32 +13,64 @@ import Login from './pages/Login';
 import Home from './pages/Home';
 
 function App() {
-  const [items, setItems] = useState([
-    { id: 1, name : "item1", price: 1}, 
-    { id: 2, name : "item2", price: 2}, 
-    { id: 3, name : "item3", price: 3}
-  ]);
+  // const [items, setItems] = useState([
+  //   { id: 1, name : "item1", price: 1}, 
+  //   { id: 2, name : "item2", price: 2}, 
+  //   { id: 3, name : "item3", price: 3}
+  // ]);
 
+  const[items, setItems] = useState([]);
   const [isLogin, setIsLogin] = useState(false);
+  let [counter, setCount] = useState(0);
 
-  const del = (id) => {
+  useEffect(() => {
+    if(isLogin){
+      getItems();
+    }
+  }, [isLogin]);
+
+  const getItems = async () => {
+    const result = await fetch("http://localhost:5500/items/");
+    const data = await result.json();
+    setItems(data);
+  };
+
+
+  const del = async (id) => {
+    await fetch("http://localhost:5500/items/" + id, {method:"DELETE"});
     setItems(items.filter((item) => item.id !== id));
   }
 
-  let [counter, setCount] = useState(0);
   const sum = () => {
     setCount(counter + 1);
   };
 
-  const add = (item) => {
-    item.id = items.length + 1;
-    setItems([...items, item]);
+  const add = async(item) => {
+    const result = await fetch("http://localhost:5500/items/", {
+      method: "POST",
+      headers:{"content-type":"application/json"},
+      body: JSON.stringify(item),
+    })
+    //item.id = items.length + 1;
+    const data = await result.json();
+    setItems([...items, data.item]);
   };
 
-  const login =(user)=>{
-    if(user.username === "Fernando" && user.password === "1234") {
-      setIsLogin(true);
-    }
+  const login = async (user) => {
+    const resul = await fetch("http://localhost:5500/login/", {
+      method:"POST", 
+      headers:{"content-type":"application/json"},
+      body: JSON.stringify(user),
+    });
+
+    const data = await resul.json();
+    setIsLogin(data.isLogin);
+
+    return data.isLogin;
+
+    // if(user.username === "Fernando" && user.password === "1234") {
+    //   setIsLogin(true);
+    // }
 
     return isLogin;
   }
