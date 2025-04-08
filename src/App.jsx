@@ -22,6 +22,8 @@ function App() {
   const[items, setItems] = useState([]);
   const [isLogin, setIsLogin] = useState(false);
   let [counter, setCount] = useState(0);
+  
+  const [token, setToken] = useState("");
 
   useEffect(() => {
     if(isLogin){
@@ -30,28 +32,41 @@ function App() {
   }, [isLogin]);
 
   const getItems = async () => {
-    const result = await fetch("http://localhost:5500/items/");
+    const tokenUsed = token;
+  
+    const result = await fetch("http://localhost:5500/items/", {
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${tokenUsed}`
+      }
+    });
     const data = await result.json();
     setItems(data);
   };
-
-
+  
   const del = async (id) => {
-    await fetch("http://localhost:5500/items/" + id, {method:"DELETE"});
+    const tokenUsed = token;
+  
+    await fetch(`http://localhost:5500/items/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Authorization": `Bearer ${tokenUsed}`
+      }
+    });
     setItems(items.filter((item) => item.id !== id));
-  }
-
-  const sum = () => {
-    setCount(counter + 1);
   };
+  
+  const add = async (item) => {
+    const tokenUsed = token;
 
-  const add = async(item) => {
     const result = await fetch("http://localhost:5500/items/", {
       method: "POST",
-      headers:{"content-type":"application/json"},
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${tokenUsed}`
+      },
       body: JSON.stringify(item),
-    })
-    //item.id = items.length + 1;
+    });
     const data = await result.json();
     setItems([...items, data.item]);
   };
@@ -64,6 +79,8 @@ function App() {
     });
 
     const data = await resul.json();
+
+    setToken(data.token);
     setIsLogin(data.isLogin);
 
     return data.isLogin;
