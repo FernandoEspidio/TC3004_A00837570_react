@@ -30,24 +30,21 @@ function App() {
   const [token, setToken] = useState("");
 
   useEffect(() => {
-    if(isLogin){
-      getItems();
-    }
-  }, [isLogin]);
-
-  const getItems = async () => {
-    const tokenUsed = token;
+    if (!isLogin) return;
   
-    const result = await fetch(`${API_URL}/items/`, {
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${tokenUsed}`
-      }
-    });
-    const data = await result.json();
-    setItems(data);
-  };
-  
+    (async () => {
+      const tokenUsed = token;
+      const res = await fetch(`${API_URL}/items/`, {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${tokenUsed}`
+        }
+      });
+      const data = await res.json();
+      setItems(data);
+    })();
+  }, [isLogin, token]);
+    
   const del = async (id) => {
     const tokenUsed = token;
   
