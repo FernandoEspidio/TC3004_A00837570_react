@@ -12,6 +12,12 @@ import CredentialsSignInPage from './pages/Login';
 import Login from './pages/Login';
 import Home from './pages/Home';
 
+// const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5500";
+
+// const API_URL = "http://localhost:5005";
+
+const API_URL = "https://hostedapi-production.up.railway.app"
+
 function App() {
   // const [items, setItems] = useState([
   //   { id: 1, name : "item1", price: 1}, 
@@ -34,7 +40,7 @@ function App() {
   const getItems = async () => {
     const tokenUsed = token;
   
-    const result = await fetch("http://localhost:5500/items/", {
+    const result = await fetch(`${API_URL}/items/`, {
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${tokenUsed}`
@@ -47,7 +53,7 @@ function App() {
   const del = async (id) => {
     const tokenUsed = token;
   
-    await fetch(`http://localhost:5500/items/${id}`, {
+    await fetch(`${API_URL}/items/${id}`, {
       method: "DELETE",
       headers: {
         "Authorization": `Bearer ${tokenUsed}`
@@ -59,7 +65,7 @@ function App() {
   const add = async (item) => {
     const tokenUsed = token;
 
-    const result = await fetch("http://localhost:5500/items/", {
+    const result = await fetch(`${API_URL}/items/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -68,11 +74,13 @@ function App() {
       body: JSON.stringify(item),
     });
     const data = await result.json();
+    console.log(data);
+    
     setItems([...items, data.item]);
   };
 
   const login = async (user) => {
-    const resul = await fetch("http://localhost:5500/login/", {
+    const resul = await fetch(`${API_URL}/login/`, {
       method:"POST", 
       headers:{"content-type":"application/json"},
       body: JSON.stringify(user),
