@@ -12,11 +12,7 @@ import CredentialsSignInPage from './pages/Login';
 import Login from './pages/Login';
 import Home from './pages/Home';
 
-// const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5500";
-
-// const API_URL = "http://localhost:5005";
-
-const API_URL = "https://hostedapi-production.up.railway.app"
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5005";
 
 function App() {
   // const [items, setItems] = useState([
