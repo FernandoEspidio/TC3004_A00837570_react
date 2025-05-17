@@ -1,18 +1,21 @@
-import logo from './logo.svg';
 import './App.css';
 import { useEffect, useState } from 'react';
-import Header from './components/Header';
+
 import Footer from './components/Footer';
-import Button from './components/Button';
+
 import List from './pages/List';
 import Add from './components/Add';
-import { BrowserRouter, Route, Routes, useAsyncError } from 'react-router-dom';
+import { BrowserRouter, Route, Routes} from 'react-router-dom';
 import ResponsiveAppBar from './components/AppBar';
-import CredentialsSignInPage from './pages/Login';
+
 import Login from './pages/Login';
 import Home from './pages/Home';
 
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5005";
+
+// const API_URL = "http://localhost:5005";
+
+//const API_URL = "https://hostedapi-production.up.railway.app"
 
 function App() {
   // const [items, setItems] = useState([
@@ -23,7 +26,6 @@ function App() {
 
   const[items, setItems] = useState([]);
   const [isLogin, setIsLogin] = useState(false);
-  let [counter, setCount] = useState(0);
   
   const [token, setToken] = useState("");
 
@@ -89,19 +91,11 @@ function App() {
 
     return data.isLogin;
 
-    // if(user.username === "Fernando" && user.password === "1234") {
-    //   setIsLogin(true);
-    // }
-
-    return isLogin;
   }
 
   const setLogout = () => {
     setIsLogin(false);
   };
-
-  const nombre = "Fer Espidio";
-  const elemento = <h1>Hello, {nombre}</h1>;
 
   return (
     <div>
