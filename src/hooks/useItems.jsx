@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 
-const API_URL = "https://hostedapi-production.up.railway.app";
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5005";
 
 export const useItems = (token) => {
   const [items, setItems] = useState([]);
