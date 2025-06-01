@@ -1,16 +1,19 @@
-import logo from './logo.svg';
 import './App.css';
-import { useEffect, useState } from 'react';
-import Header from './components/Header';
+import {useEffect, useState } from 'react';
+
 import Footer from './components/Footer';
-import Button from './components/Button';
+
 import List from './pages/List';
 import Add from './components/Add';
-import { BrowserRouter, Route, Routes, useAsyncError } from 'react-router-dom';
+import { BrowserRouter, Route, Routes} from 'react-router-dom';
 import ResponsiveAppBar from './components/AppBar';
-import CredentialsSignInPage from './pages/Login';
+
 import Login from './pages/Login';
 import Home from './pages/Home';
+import ItemInfo from './components/ItemInfo';
+import LifeCycle from './components/LifeCycle';
+import useAuth from './hooks/useAuth';
+import { useItems } from './hooks/useItems';
 
 function App() {
   // const [items, setItems] = useState([
@@ -19,99 +22,33 @@ function App() {
   //   { id: 3, name : "item3", price: 3}
   // ]);
 
-  const[items, setItems] = useState([]);
-  const [isLogin, setIsLogin] = useState(false);
-  let [counter, setCount] = useState(0);
-  
-  const [token, setToken] = useState("");
+  const [show, setShow] = useState(false);
+
+  const {isLogin, token, login, logout} = useAuth();
+  const {items, getItems, addItem, delItem} = useItems(token);
 
   useEffect(() => {
-    if(isLogin){
+    if(isLogin) {
       getItems();
     }
-  }, [isLogin]);
-
-  const getItems = async () => {
-    const tokenUsed = token;
-  
-    const result = await fetch("http://localhost:5500/items/", {
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${tokenUsed}`
-      }
-    });
-    const data = await result.json();
-    setItems(data);
-  };
-  
-  const del = async (id) => {
-    const tokenUsed = token;
-  
-    await fetch(`http://localhost:5500/items/${id}`, {
-      method: "DELETE",
-      headers: {
-        "Authorization": `Bearer ${tokenUsed}`
-      }
-    });
-    setItems(items.filter((item) => item.id !== id));
-  };
-  
-  const add = async (item) => {
-    const tokenUsed = token;
-
-    const result = await fetch("http://localhost:5500/items/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${tokenUsed}`
-      },
-      body: JSON.stringify(item),
-    });
-    const data = await result.json();
-    setItems([...items, data.item]);
-  };
-
-  const login = async (user) => {
-    const resul = await fetch("http://localhost:5500/login/", {
-      method:"POST", 
-      headers:{"content-type":"application/json"},
-      body: JSON.stringify(user),
-    });
-
-    const data = await resul.json();
-
-    setToken(data.token);
-    setIsLogin(data.isLogin);
-
-    return data.isLogin;
-
-    // if(user.username === "Fernando" && user.password === "1234") {
-    //   setIsLogin(true);
-    // }
-
-    return isLogin;
-  }
-
-  const setLogout = () => {
-    setIsLogin(false);
-  };
-
-  const nombre = "Fer Espidio";
-  const elemento = <h1>Hello, {nombre}</h1>;
+  }, [isLogin, getItems]);
 
   return (
     <div>
       <BrowserRouter>
-      {isLogin && <ResponsiveAppBar setLogout={setLogout}/>}
+      {isLogin && <ResponsiveAppBar logout={logout}/>}
         <Routes>
           <Route path="/" element={<Login login={login}/>}/>
-          <Route path="/add" element={<Add add={add}/>}/>
-          <Route path="/items" element={<List items={items} ondelete = {del}/>}/>
+          <Route path="/add" element={<Add add={addItem}/>}/>
+          <Route path="/items" element={<List items={items} ondelete = {delItem}/>}/>
           <Route path="/home" element={<Home/>}/>
+          <Route path="/items/:id" element={<ItemInfo items={items}/>}/>
         </Routes>
 
       <Footer/>
       </BrowserRouter>
+      <button onClick={() => setShow(!show)}>{show ? "Hide" : "Show"} LifeCycle</button>
+      {show && <LifeCycle/>}
 {/* 
       {counter}
       <Button 

@@ -3,7 +3,14 @@ import Item from '../components/Item'
 
 const List = ({items, ondelete}) => {
   return (
-    <>
+    <table>
+        <thead>
+            <tr>
+                <th>Item</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+      <tbody>
         {items.map((i) => (
             <Item 
               item = {i} 
@@ -11,7 +18,8 @@ const List = ({items, ondelete}) => {
               ondelete = {ondelete}
             />
         ))}
-    </>
+      </tbody>
+    </table>
   );
 };
 
